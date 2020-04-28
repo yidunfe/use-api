@@ -35,11 +35,24 @@ export default class LoadingManager {
     Loading.getDecoratoredMethods().forEach(item => {
       store.commit('loadings/INIT_LOADING', { parent: item.namespace, key: item.key, value: false })
     })
+
+    Loading.on('beforeDecorator', (payload: any) => {
+      const {
+        namespace,
+        propertyKey,
+        args: [key]
+      } = payload
+      store.commit('loadings/INIT_LOADING', { parent: namespace, key: key || propertyKey, value: false })
+    })
+
     Loading.use(async (ctx: any, next: Function) => {
       const { namespace, key } = ctx
       store.commit('loadings/SET_LOADING', { parent: namespace, key, value: true })
-      await next()
-      store.commit('loadings/SET_LOADING', { parent: namespace, key, value: false })
+      try {
+        await next()
+      } finally {
+        store.commit('loadings/SET_LOADING', { parent: namespace, key, value: false })
+      }
     })
 
     Vue.prototype.$loadings = store.state.loadings

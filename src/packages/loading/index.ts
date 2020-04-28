@@ -11,12 +11,13 @@ const Loading: MethodDecoratorFactory = extend(function(key?: string) {
     const namespace = target.$namespace || target.constructor.name
     const original = descriptor.value
     let peddingPromises: Map<string, Promise<any>> = new Map()
+    const originalKey = key
     key = key || propertyKey.toString()
 
     Loading.emit('beforeDecorator', {
       namespace,
       propertyKey,
-      args: [key]
+      args: [originalKey]
     })
 
     descriptor.value = async function(...args: any[]) {
@@ -25,10 +26,10 @@ const Loading: MethodDecoratorFactory = extend(function(key?: string) {
         key,
         result: null
       }
+      const uniquKey = generateKey(target.$url || propertyKey, args)
       try {
         await Loading._runMiddlewares(ctx, [
           async () => {
-            const uniquKey = generateKey(target.$url || propertyKey, args)
             let fetchPromise = peddingPromises.has(uniquKey)
               ? (peddingPromises.get(uniquKey) as Promise<any>)
               : original.apply(this, args)
@@ -41,6 +42,8 @@ const Loading: MethodDecoratorFactory = extend(function(key?: string) {
         return ctx.result
       } catch (error) {
         return Promise.reject(error)
+      } finally {
+        peddingPromises.delete(uniquKey)
       }
     }
 

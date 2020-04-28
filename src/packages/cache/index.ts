@@ -35,13 +35,13 @@ const Cache: MethodDecoratorFactory = extend(function(uniqueKey?: string): Metho
         propertyKey,
         result: null
       }
+      let cacheStoreKey = uniqueKey
+        ? uniqueKey
+        : CacheStore.generateKey(`${namespace}_${propertyKey.toString()}`, args)
       try {
         await Cache._runMiddlewares(ctx, [
           async () => {
             let result: any
-            let cacheStoreKey = uniqueKey
-              ? uniqueKey
-              : CacheStore.generateKey(`${namespace}_${propertyKey.toString()}`, args)
             let cachedData = cacheStore.get(cacheStoreKey)
             if (cachedData !== null && !isPromise(cachedData)) {
               result = cachedData
@@ -57,6 +57,9 @@ const Cache: MethodDecoratorFactory = extend(function(uniqueKey?: string): Metho
           }
         ])
       } catch (error) {
+        if (isPromise(cacheStore.get(cacheStoreKey))) {
+          cacheStore.delete(cacheStoreKey)
+        }
         return Promise.reject(error)
       }
       return ctx.result
