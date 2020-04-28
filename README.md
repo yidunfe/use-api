@@ -12,11 +12,11 @@
 ### 快速上手
 
 ```
-npm install @yidun/use-api -S
+npm install @imllz/use-api -S
 
-import Api, { Cache, Loading, VueLoadingPlugin } from '@yidun/use-api'
+import Api, { Cache, Loading, VueLoadingPlugin } from '@imllz/use-api'
 
-// 需要自定义 fetch 方法，规范的 fetch 接口定义参见更多的 api
+// 需要自定义 fetch 方法，规范的 fetch 接口定义参见 Api 详解
 Api.setOptions({ fetch })
 
 class MyService {
@@ -105,7 +105,7 @@ class MyService {
 为接口提供 loading 功能，解决快速点击触发多次接口调用的问题。并且提供了 vue 插件来实现视图中 loading 状态的同步，借助 vuex store 来实现
 
 ```
-import VueLoadingPlugin from '@yidun/use-api'
+import { VueLoadingPlugin } from '@imllz/use-api'
 
 Vue.use(VueLoadingPlugin, { store })
 

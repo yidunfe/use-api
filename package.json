@@ -1,8 +1,14 @@
 {
-  "name": "use-api",
-  "version": "0.0.0",
-  "description": "",
-  "keywords": [],
+  "name": "@imllz/use-api",
+  "version": "1.0.0",
+  "description": "以 class 的方式组织前端数据层，以装饰器的方式提供通用的能力",
+  "keywords": [
+    "services",
+    "decorator",
+    "api",
+    "vue",
+    "vue 数据层"
+  ],
   "main": "dist/use-api.umd.js",
   "module": "dist/use-api.es5.js",
   "typings": "dist/types/use-api.d.ts",
@@ -21,7 +27,7 @@
   "scripts": {
     "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
     "prebuild": "rimraf dist",
-    "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
+    "build": "tsc --module commonjs && rollup -c rollup.config.ts",
     "start": "rollup -c rollup.config.ts -w",
     "demo": "cd demo && npm run dev",
     "test": "jest --coverage",
