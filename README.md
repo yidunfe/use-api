@@ -20,6 +20,11 @@ import Api, { Cache, Loading, VueLoadingPlugin } from '@imllz/use-api'
 Api.setOptions({ fetch })
 
 class MyService {
+  // 必须的，声明全局唯一的命名空间
+  get namespace () {
+    return 'MyService'
+  }
+
   @Cache()
   @Loading()
   @Api('/api/query')
@@ -31,12 +36,17 @@ Loading 提供了 vue 插件，可以在模板中使用 loading 的状态
 Vue.use(VueLoadingPlugin, { store })
 
 class MyService {
+  get namespace () {
+    return 'MyService'
+  }
   @Loading()
   @Api('/api/query')
   query () {}
 }
 
-Vue 模板使用，默认以类名称和方法key作为 loading 的唯一标识
+new MyService().query()
+
+Vue 模板使用，默认以命名空间和方法 key 作为 loading 的唯一标识
 <template>
   <button :loading="$loadings.MyService.query">click</button>
 </template>
@@ -44,23 +54,6 @@ Vue 模板使用，默认以类名称和方法key作为 loading 的唯一标识
 ```
 
 ### api 详解
-
-#### @Service(namespance?: string)
-
-类装饰器，目前仅用于定义 namespance，默认为 class 名称
-
-```
-@Service('MyCustomService')
-class MyService {
-  query (params) {}
-}
-
-// namespance 默认为 MyService
-class MyService {
-  query (params) {}
-}
-```
-
 
 #### @Api(url: string, options: object)
 
@@ -77,6 +70,9 @@ export interface Fetch {
 // 场景1：接口传值
 // params: 所有传给后端接口的参数请包装成一个对象，装饰器会取传实际调用的方法的第一个参数当成 body 字段传递给 fetch
 class MyService {
+  get namespace () {
+    return 'MyService'
+  }
   @Api('/api/query')
   query (params) {}
 }
@@ -84,6 +80,9 @@ class MyService {
 // 场景2：options 会透传给 fetch
 // 如 quiet: true，具体逻辑由 fetch 自行实现
 class MyService {
+  get namespace () {
+    return 'MyService'
+  }
   @Api('/api/query', { quiet: true })
   query (params) {}
 }
@@ -91,6 +90,9 @@ class MyService {
 // 场景3：对接口返回值做修改
 // 允许对接口返回值做修改，会以最后一个参数回调的形式提供；被装饰的方法需要 return 处理后的值，return undefined 会被忽略
 class MyService {
+  get namespace () {
+    return 'MyService'
+  }
   @Api('/api/query', { quiet: true })
   query (params, flag, result) {
     if (flag) {
@@ -110,6 +112,9 @@ import { VueLoadingPlugin } from '@imllz/use-api'
 Vue.use(VueLoadingPlugin, { store })
 
 class MyService {
+  get namespace () {
+    return 'MyService'
+  }
   @Loading()
   @Api('/api/query')
   query (params) {}
@@ -127,6 +132,9 @@ class MyService {
 
 ```
 class MyService {
+  get namespace () {
+    return 'MyService'
+  }
   @Cache()
   @Api('/api/query')
   query (params) {}

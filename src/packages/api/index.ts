@@ -1,4 +1,4 @@
-import { generateKey, isFunction } from '../../utils'
+import { isFunction, validateNamespace } from '../../utils'
 import extend from '../../utils/extend'
 import { MethodDecoratorFactory, ApiOptions } from '../../index'
 
@@ -18,7 +18,8 @@ const Api: MethodDecoratorFactory = extend(function(
     propertyKey: string | symbol,
     descriptor: any
   ): TypedPropertyDescriptor<any> {
-    const namespace = target.$namespace || target.constructor.name
+    const namespace = target.namespace
+    validateNamespace(namespace, target)
     target.$url = url
     const original = descriptor.value
 

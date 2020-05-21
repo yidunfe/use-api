@@ -1,6 +1,6 @@
 import extend from '../../utils/extend'
 import { MethodDecoratorFactory } from '../../index'
-import { generateKey } from '../../utils'
+import { generateKey, validateNamespace } from '../../utils'
 
 const Loading: MethodDecoratorFactory = extend(function(key?: string) {
   return function(
@@ -8,7 +8,8 @@ const Loading: MethodDecoratorFactory = extend(function(key?: string) {
     propertyKey: string | symbol,
     descriptor: any
   ): TypedPropertyDescriptor<any> {
-    const namespace = target.$namespace || target.constructor.name
+    const namespace = target.namespace
+    validateNamespace(namespace, target)
     const original = descriptor.value
     let peddingPromises: Map<string, Promise<any>> = new Map()
     const originalKey = key

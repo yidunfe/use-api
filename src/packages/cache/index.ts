@@ -1,5 +1,5 @@
 import CacheStore, { ItemCache } from '../../utils/cache'
-import { isPromise } from '../../utils'
+import { isPromise, validateNamespace } from '../../utils'
 import extend from '../../utils/extend'
 import { MethodDecoratorFactory } from '../../index'
 
@@ -20,7 +20,8 @@ const Cache: MethodDecoratorFactory = extend(function(uniqueKey?: string): Metho
     propertyKey: string | symbol,
     descriptor: any
   ): TypedPropertyDescriptor<any> {
-    const namespace = target.$namespace || target.constructor.name
+    const namespace = target.namespace
+    validateNamespace(namespace, target)
     const original = descriptor.value
 
     Cache.emit('beforeDecorator', {
