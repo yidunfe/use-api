@@ -34,7 +34,12 @@ export default {
   },
   methods: {
     async queryProducts () {
-      this.productList = await ProductService.queryProducts({ type: 1 })
+      const params = { type: 1 }
+      this.productList = await ProductService.queryProducts({ params })
+      const customArg = true
+      this.productList = await ProductService.queryProducts(params, customArg)
+      this.productList = await ProductService.queryProducts()
+      this.productList = await ProductService.queryProducts(undefined, customArg)
       // state.test = !state.test
       console.log('queryProducts', this.productList)
     },

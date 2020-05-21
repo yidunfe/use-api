@@ -1,6 +1,10 @@
 import { Api, Loading, Cache, CacheClear } from '@/helpers/use-api'
-
 class ProductService {
+
+  get namespace () {
+    return 'ProductService'
+  }
+
   @Cache('ProductService_productList')
   @Loading('productLoading')
   @Api('/api/product/query.json', { method: 'get' })
